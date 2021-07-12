@@ -164,4 +164,106 @@ namespace xml_project
 							if (index < c.Length)
 								csub = c[index];
 						}
-						
+		else // may be there are spaces only after closing tag => we don't need them
+						{
+							d = 0; // flag
+							for (int i = 0; i < csub.Length; i++)
+							{
+								if (csub[i] != ' ') d = 1;
+							}
+							if (d == 0) // all characters are spaces
+							{
+								index++; // go to next line
+								if (index < c.Length)
+									csub = c[index];
+							}
+
+
+
+						}
+
+
+
+					}
+					else if (csub[iter + 1] != '/') // opening tag
+					{
+						node child=new node(); // create child node
+						if (index == 0) // first tag
+						{
+							child.parent = null;
+							root = child; // make root point at the first node
+						}
+
+
+
+						child.parent = currnode; // now currnode is the parent of this child
+						int close = csub.IndexOf('>');
+						int space = csub.IndexOf(' ');
+						int dash = csub.IndexOf('/');
+						if (dash == -1 || dash > close) // not opening and closing at the same time
+						{
+							if (space == -1 || space > close) // there is no value <tag>
+								child.name = csub.Substring(iter + 1, close - iter - 1); // set child name
+							else // there is value <tag ..>
+							{
+								child.name = csub.Substring(iter + 1, space - iter - 1); // set child name
+								child.value = csub.Substring(space + 1, close - space - 1); // set child value
+							}
+							if (index != 0)
+								currnode.children.Enqueue(child); // currnode is still parent of child, add child to parent's queue
+							currnode = child; // make currnode = child because it will be parent of other tags coming
+						}
+						else // it's an opnening and closing tag
+						{
+							if (space == -1 || space > close) // there is no value
+								child.name = csub.Substring(iter + 1, dash - iter - 1); // set child name
+							else // there is value ex <tag type=""/>
+							{
+								child.name = csub.Substring(iter + 1, space - iter - 1); // set child name
+								child.value = csub.Substring(space + 1, dash - space - 1); // set child value
+							}
+							if (index != 0)
+								currnode.children.Enqueue(child); // currnode is still parent of child, add child to parent's queue
+															   // we didn't write currnode = child;
+															   // because tag was closed .. parent is still currnode and is not updated with child => child won't be parent of other tags
+						}
+
+
+
+						csub = csub.Substring(close + 1); //
+						if (csub.Length == 0) // there's nothing after tag
+						{
+							index++; // go to next line
+							if (index < c.Length)
+								csub = c[index];
+						}
+						else // may be there are spaces only after tag => we don't need them
+						{
+							d = 0; // flag
+							for (int i = 0; i < csub.Length; i++)
+							{
+								if (csub[i] != ' ') d = 1;
+							}
+							if (d == 0) // all characters are spaces
+							{
+								index++; // go to next line
+								if (index < c.Length)
+									csub = c[index];
+							}
+
+
+
+						}
+
+
+
+					}
+				}
+			}
+
+
+
+		}
+	}
+}
+					
