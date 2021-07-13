@@ -127,7 +127,7 @@ namespace xml_project
 							else // there is value <tag ..>
 							{
 								child.name = mm.Substring(1, space-1); // set child name
-								child.value = csub.Substring(space + 1, close - space - 1); // set child value
+								child.value = mm.Substring(space + 1, close - space - 1); // set child value
 							}
 							if (currnode != null)
 								currnode.children.Add(child); // currnode is still parent of child, add child to parent's queue
