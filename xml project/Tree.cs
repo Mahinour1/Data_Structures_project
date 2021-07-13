@@ -5,7 +5,7 @@ using System.Text;
 namespace xml_project
 {
 	class Tree
-	{
+	{       public int space=0;
 		public node root { get; set; }
 		public Tree(node root = null)
 		{ }
@@ -198,7 +198,77 @@ namespace xml_project
 
 		}
                
-		
+		      public int Find_Space(node l,node h)
+          {
+            if(l.name  ==  h.name)
+               { 
+			  return 0;
+		       }
+         
+           else
+              {   
+             if(h.children.Count !=0)
+			++space;
+             List<node> child =h.children;
+			for(int i=0;i<h.children.Count ;i++)
+               {
+			   if(child[i].name == l.name) return space;
+			   }
+                 
+            for(int j=0;j<h.children.Count;j++)
+               {
+              if(h.children.Count!=0)
+                Find_Space( l, child[j]);
+              }
+            return space;
+           } 
+        }
+
+     public void print_space(node e)
+     {
+       int num=0;
+	   space=0;
+       num=Find_Space(e,root);
+      // Console.Write(num);
+      for(int i=0;i<=num;i++)
+      {
+           Console.Write(" ");
+      }
+   }
+    
+        public void format(node f) 
+        { 
+          print_space(f);  
+          Console.Write( "<"+f.name);
+          if(f.value!=null)
+            Console.Write( " "+f.value+">");
+          else Console.Write(">");
+		  List<node> child =f.children;
+          if (f.children.Count!=0)
+            {
+              Console.WriteLine("\n");
+              for(int i=0;i<f.children.Count;i++)
+              {
+                format(child[i]);
+              }
+         
+            }
+         
+          if(f.children.Count!=0)
+          {
+            print_space(f);
+          }
+          
+          Console.Write("</"+f.name+">");
+          Console.WriteLine("\n");
+            
+   
+
+        }
+        public void Format_Xml()
+        {
+		  format(root); 
+		}
 		
 		
 	}
