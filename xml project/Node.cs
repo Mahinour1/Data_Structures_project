@@ -12,6 +12,7 @@ namespace xml_project
         public string name { get; set; }
         public string value { get; set; }
         public string data { get; set; }
+        public int type { get; set; }
         //int type;
         //public Node[] children = new Node[10];
         public Queue<node> children = new Queue<node>();
