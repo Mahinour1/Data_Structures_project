@@ -7,20 +7,28 @@ namespace xml_project
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-			string[] lines = System.IO.File.ReadAllLines(@"D:\gam3a\3rd\2nd term\DS\ex\k.txt");
-			//int error[lines.Length]
+			string[] lines = System.IO.File.ReadAllLines(@"D:\trial.txt");
+			Tree t = new Tree();
+			t.drawtree(lines);
 			int[] error= new int[lines.Length];
-			CheckError(lines, error);
+			string[] copy = new string[lines.Length];
+			//CheckError(lines, error, copy);
+			for (int i = 0; i < lines.Length; i++)
+			{
+				Console.WriteLine(copy[i]); //Console.WriteLine();
+			}
+
+			
 
 		}
-		public static void CheckError(string[] c, int[] error)
+		public static void CheckError(string[] c, int[] error, string[] copy)
 		{
-			string[] copy = new string[c.Length];
+			//string[] copy = new string[c.Length];
 			for(int i=0;i<c.Length; i++)
             {
 				copy[i] = c[i];
             }
+			string mm;
 			int flag=0;
 			string name;
 			Stack<string> s =new Stack<string>();
@@ -88,21 +96,22 @@ namespace xml_project
 					{
 						if (flag != 1)
 						{
-							int close = csub.IndexOf('>');
-							int space = csub.IndexOf(' ');
-							int dash = csub.IndexOf('/');
-							int open = csub.IndexOf('<');
+							mm = csub.Substring(iter); // without spaces
+							int close = mm.IndexOf('>');
+							int space = mm.IndexOf(' ');
+							int dash = mm.IndexOf('/');
+							int open = mm.IndexOf('<');
 							if (dash == -1 || dash > close) // not opening and closing at the same time
 							{
-								if (space == -1 || (space > close || (space < close && space < open))) // there is no value <tag>
-									name = csub.Substring(iter + 1, close - iter - 1); // set child name
+								if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
+									name = mm.Substring(1, close- 1); // set child name
 								else // there is value <tag ..>
-								{
-									name = csub.Substring(iter + 1, space - iter - 1); // set child name
+								{ 
+									name = mm.Substring(1, space-1); // set child name
 								}
 								s.Push(name);
 							}
-							csub = csub.Substring(close + 1);
+							csub = mm.Substring(close + 1);
 							if (csub.Length == 0) // there's nothing after tag
 							{
 								index++; // go to next line
@@ -137,11 +146,6 @@ namespace xml_project
 
 					}
 				}
-			}
-            while(s.Count!=0) 
-			{
-				error[index - 1] = 1;
-				copy[index - 1] += "</" + s.Pop() + ">";
 			}
 		}
 	}
