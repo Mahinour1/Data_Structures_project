@@ -147,6 +147,11 @@ namespace xml_project
 					}
 				}
 			}
+			while (s.Count != 0)
+			{
+				error[index - 1] = 1;
+				copy[index - 1] += "</" + s.Pop() + ">";
+			}
 		}
 	}
 }
