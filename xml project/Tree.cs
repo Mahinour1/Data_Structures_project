@@ -115,10 +115,11 @@ namespace xml_project
 						int close = csub.IndexOf('>');
 						int space = csub.IndexOf(' ');
 						int dash = csub.IndexOf('/');
+						int open = csub.IndexOf('<');
 						if (dash == -1 || dash > close) // not opening and closing at the same time
 						{
 							child.type = 1;
-							if (space == -1 || space > close) // there is no value <tag>
+							if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
 								child.name = csub.Substring(iter + 1, close - iter - 1); // set child name
 							else // there is value <tag ..>
 							{
