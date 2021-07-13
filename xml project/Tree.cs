@@ -123,7 +123,9 @@ namespace xml_project
 						{
 							child.type = 1;
 							if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
-								child.name = mm.Substring(1, close- 1); // set child name 
+							{	child.name = mm.Substring(1, close- 1);// set child name
+							 child.value = null ;
+							}
 							else // there is value <tag ..>
 							{
 								child.name = mm.Substring(1, space-1); // set child name
@@ -270,6 +272,31 @@ namespace xml_project
 		  format(root); 
 		}
 		
-		
+		 public void Minifying_Xml()
+        {
+         Minifying(root);
+        }
+
+      public void Minifying(node f)
+      { 
+          Console.Write( "<"+f.name);
+          if(f.value!=null)
+            Console.Write( " "+f.value+">");
+          else Console.Write(">");
+          Console.Write(f.data);
+		  List<node> child =f.children;
+          if (f.children.Count!=0)
+          {
+             for(int i=0;i<f.children.Count;i++)
+             {
+               Minifying(child[i]);
+             }
+          }  
+          Console.Write("</"+f.name+">");
+      }  
+
+
+
+
 	}
 }
