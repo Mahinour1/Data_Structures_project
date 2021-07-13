@@ -8,7 +8,7 @@ namespace xml_project
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-			string[] lines = System.IO.File.ReadAllLines(@"D:\trial.txt");
+			string[] lines = System.IO.File.ReadAllLines(@"D:\gam3a\3rd\2nd term\DS\ex\k.txt");
 			//int error[lines.Length]
 			int[] error= new int[lines.Length];
 			CheckError(lines, error);
@@ -137,6 +137,11 @@ namespace xml_project
 
 					}
 				}
+			}
+            while(s.Count!=0) 
+			{
+				error[index - 1] = 1;
+				copy[index - 1] += "</" + s.Pop() + ">";
 			}
 		}
 	}
