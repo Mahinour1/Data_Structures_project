@@ -15,7 +15,7 @@ namespace xml_project
         public int type { get; set; }
         //int type;
         //public Node[] children = new Node[10];
-        public Queue<node> children = new Queue<node>();
+        public List<node> children = new List<node>();
         public node parent { get; set; }
         /* node(string n, string v = "NULL", string d = "NULL")
          {
