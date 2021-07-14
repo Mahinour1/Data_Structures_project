@@ -286,7 +286,7 @@ namespace xml_project
         }
 
          public void Minifying_Xml(node f)
-      {   if(Type==true)//<find />
+      {   if(f.type==0)//<find />
            {
              Console.Write( "<"+f.name);
              if(f.value!=null)
