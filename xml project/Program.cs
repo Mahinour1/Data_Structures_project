@@ -13,7 +13,9 @@ namespace xml_project
 			List<HeapNode> list = new List<HeapNode>();
 			Frequency(lines, list);
 			HuffmanBuild(ref list);
-			
+			string stream = null;
+			List<Characters> Bits = new List<Characters>();
+			HuffmanTraverse(list[0], ref Bits, ref stream);
 		}
         static void Frequency(string[] input, List<HeapNode> list)
         {
@@ -73,6 +75,26 @@ namespace xml_project
 				heap = heap.OrderBy(node => node.Freq).ToList();
 
 			}
+		}
+
+		static void HuffmanTraverse(HeapNode Root, ref List<Characters> bits, ref string stream)
+		{
+			if (Root.Left == null && Root.Right == null)
+			{
+				Characters element = new Characters();
+				element.Data = Root.Data;
+				element.Bits = stream;
+				bits.Add(element);
+				stream = stream.Substring(0, stream.Length - 1);
+				return;
+			}
+			stream += '0';
+			HuffmanTraverse(Root.Left, ref bits, ref stream);
+			stream += '1';
+			HuffmanTraverse(Root.Right, ref bits, ref stream);
+			if (stream.Length != 0)
+				stream = stream.Substring(0, stream.Length - 1);
+			return;
 		}
 	}
 }

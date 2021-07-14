@@ -12,5 +12,9 @@ namespace xml_project
         public HeapNode Right { get; set; }
         
     }
-    
+    class Characters
+    {
+        public char Data { get; set; }
+        public string Bits { get; set; }
+    }
 }
