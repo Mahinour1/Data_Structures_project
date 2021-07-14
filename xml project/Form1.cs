@@ -34,9 +34,14 @@ namespace WindowsFormsApp1
 
 			for (int i = 0; i < lines1.Length; i++)
 			{
+				/*Label l=new Label();
+				l.Text = "Erorr";
+				l.ForeColor = Color.Red;
+				l.Font = new Font(Font.FontFamily, 14);
+				*/
 				if (error[i] == 1)
 				{
-				lines1[i]+=char.ConvertFromUtf32(8595);
+				lines1[i]= lines1[i]+"   "+char.ConvertFromUtf32(8595)+"//Error";
 				}
 				before += lines1[i] + Environment.NewLine;
 
@@ -205,17 +210,50 @@ namespace WindowsFormsApp1
 			int[] error = new int[lines1.Length];
 			string[] copy = new string[lines1.Length];
 			string z = null;
+			int flag = 0;
 
 			CheckError(lines1, error, copy);
-
-			for (int i = 0; i < lines1.Length; i++)
+			for (int j = 0; j < lines1.Length; j++)
 			{
-				z += copy[i] + Environment.NewLine;
-
+				if (error[j] == 1)
+				{
+					flag = 1;
+					break;
+				}
 			}
-			textBox2.Text = z;
+			if (flag == 1)
+			{
+				for (int i = 0; i < lines1.Length; i++)
+				{
+					z += copy[i] + Environment.NewLine;
+				}
+				textBox2.Text = z;
+			}
+            else
+			{ 
+				textBox2.Text = "The XML is already correct"; 
+			}
 		}
 
-	}
+        private void button3_Click(object sender, EventArgs e)
+        {
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.ShowDialog();
+			string x = ofd.FileName;
+			string[] lines1 = System.IO.File.ReadAllLines(@x);
+			string tx=null;
+			for (int i = 0; i < lines1.Length; i++)
+			{
+				tx += lines1[i] + Environment.NewLine;
+
+			}
+			textBox2.Text = tx;
+		}
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
     
 }
