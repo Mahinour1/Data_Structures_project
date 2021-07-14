@@ -173,8 +173,8 @@ namespace WindowsFormsApp1
 						}
 						else if (flag == 1)
 						{
-							error[index - 1] = 1;
-							copy[index - 1] += "</" + s.Pop() + ">";
+							error[index] = 1;
+							copy[index] += "</" + s.Pop() + ">";
 							flag = 0;
 						}
 
@@ -237,23 +237,261 @@ namespace WindowsFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.ShowDialog();
-			string x = ofd.FileName;
+			//OpenFileDialog ofd = new OpenFileDialog();
+			//ofd.ShowDialog();
+			string x = ofd1.FileName;
 			string[] lines1 = System.IO.File.ReadAllLines(@x);
-			string tx=null;
-			for (int i = 0; i < lines1.Length; i++)
-			{
-				tx += lines1[i] + Environment.NewLine;
-
-			}
-			textBox2.Text = tx;
+			string form = null;
+			Tree T = new Tree();
+			T.drawtree(lines1);
+			T.Format(ref form);	
+			textBox2.Text =form ;
 		}
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+			OpenFileDialog ofd2 = new OpenFileDialog();
+			ofd2.ShowDialog();
+			string x = ofd2.FileName;
+			TextWriter txt = new StreamWriter(@x);
+			txt.Write(textBox1.Text);
+			txt.Close();
+		}
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+			string x = ofd1.FileName;
+			string json = null;
+			string[] lines1 = System.IO.File.ReadAllLines(@x);
+			int[] error = new int[lines1.Length];
+			string[] copy = new string[lines1.Length];
+			CheckError(lines1, error, copy);
+			Tree T = new Tree();
+			T.drawtree(copy);
+			start(T.root,ref json);
+			string one = json;
+			textBox2.Text = one;
+	
+		}
+		static void start(node n,ref string json, int has_twin = 0, int twin_write = 0)
+		{
+			Console.WriteLine("{");
+			json += "{" + Environment.NewLine;
+			convert(n,ref json, has_twin, twin_write);
+			Console.WriteLine("\n}");
+			json += Environment.NewLine + "}" + Environment.NewLine;
+		}
+
+		static void convert(node n, ref string json, int has_twin, int twin_write)
+		{
+			if ((n.children.Count == 0) && (has_twin == 0)) //has data //base case
+			{
+				//case 1 in table
+				if ((n.type == 0) && (n.value == null))
+				{
+					Console.Write("\"" + n.name + "\":null");
+					json += "\"" + n.name + "\":null";
+				}
+				//case 3 in table
+				else if ((n.type == 0) && (n.value != null))
+				{
+					string v_name, v_value;
+					int eq = n.value.IndexOf("=");
+					v_name = n.value.Substring(0, eq);
+					v_value = n.value.Substring(eq + 1);
+					Console.WriteLine("\"" + n.name + "\":{");
+					json += "\"" + n.name + "\":{" + Environment.NewLine;
+					Console.WriteLine("\"@" + v_name + "\":" + v_value);
+					json += "\"@" + v_name + "\":" + v_value + Environment.NewLine;
+					Console.Write("}");
+					json += "}";
+					//Console.Write("\"" + n.name+"\":{\"@"+v_name+"\":\""+v_value+"\"}");
+				}
+				//case 2 in table
+				else if ((n.type == 1) && (n.value == null) && (n.data != null))
+				{
+					Console.Write("\"" + n.name + "\":\"" + n.data + "\"");
+					json += "\"" + n.name + "\":\"" + n.data + "\"";
+				}
+				//case 4 in table
+				else if ((n.type == 1) && (n.value != null) && (n.data != null))
+				{
+					string v_name, v_value;
+					int eq = n.value.IndexOf("=");
+					v_name = n.value.Substring(0, eq);
+					v_value = n.value.Substring(eq + 1);
+					Console.WriteLine("\"" + n.name + "\":{");
+					json += "\"" + n.name + "\":{" + Environment.NewLine;
+					Console.WriteLine("\"@" + v_name + "\":" + v_value + ",");
+					json += "\"@" + v_name + "\":" + v_value + "," + Environment.NewLine;
+					Console.WriteLine("\"#text\":\"" + n.data + "\"");
+					json += "\"#text\":\"" + n.data + "\"" + Environment.NewLine;
+					Console.Write("}");
+					json += "}";
+					//Console.Write("\"" + n.name + "\":{\"@" + v_name + "\":\"" + v_value + "\",\"#text\":\"" + n.data);
+				}
+
+				return;
+			}
+
+			else if ((n.children.Count == 0) && (has_twin == 1)) //has data //base case
+			{
+				//case 1 in table
+				if ((n.type == 0) && (n.value == null))
+				{
+					Console.Write("null");
+					json += "null";
+				}
+				//case 3 in table
+				else if ((n.type == 0) && (n.value != null))
+				{
+					string v_name, v_value;
+					int eq = n.value.IndexOf("=");
+					v_name = n.value.Substring(0, eq);
+					v_value = n.value.Substring(eq + 1);
+					Console.WriteLine("{");
+					json += "{" + Environment.NewLine;
+					Console.WriteLine("\"@" + v_name + "\":" + v_value);
+					json += "\"@" + v_name + "\":" + v_value + Environment.NewLine;
+					Console.Write("}");
+					json += "}";
+					//Console.Write("\"" + n.name+"\":{\"@"+v_name+"\":\""+v_value+"\"}");
+				}
+				//case 2 in table
+				else if ((n.type == 1) && (n.value == null) && (n.data != null))
+				{
+					Console.Write("\"" + n.data + "\"");
+					json += "\"" + n.data + "\"";
+				}
+				//case 4 in table
+				else if ((n.type == 1) && (n.value != null) && (n.data != null))
+				{
+					string v_name, v_value;
+					int eq = n.value.IndexOf("=");
+					v_name = n.value.Substring(0, eq);
+					v_value = n.value.Substring(eq + 1);
+					Console.WriteLine("{");
+					json += "{" + Environment.NewLine;
+					Console.WriteLine("\"@" + v_name + "\":" + v_value + ",");
+					json += "\"@" + v_name + "\":" + v_value + "," + Environment.NewLine;
+					Console.WriteLine("\"#text\":\"" + n.data + "\"");
+					json += "\"#text\":\"" + n.data + "\"" + Environment.NewLine;
+					Console.Write("}");
+					json += "}";
+					//Console.Write("\"" + n.name + "\":{\"@" + v_name + "\":\"" + v_value + "\",\"#text\":\"" + n.data);
+				}
+
+				return;
+			}
+			// if has children we should decide first if they are twins
+			if ((n.children.Count > 1) && (n.children[0].name == n.children[1].name))
+				has_twin = 1;
+			else
+			{
+				has_twin = 0;
+				//twin_write = 0;
+			}
+
+			//if children are not twins
+			if ((has_twin == 0))
+			{
+				if (twin_write == 0)
+					Console.Write("\"" + n.name + "\":");
+				json += "\"" + n.name + "\":";
+				Console.Write("{");
+				json += "{";
+				for (int i = 0; i < n.children.Count; i++)
+				{
+					Console.Write("\n");
+					json += Environment.NewLine;
+					if (n.value != null)
+					{
+						string v_name, v_value;
+						int eq = n.value.IndexOf("=");
+						v_name = n.value.Substring(0, eq);
+						v_value = n.value.Substring(eq + 1);
+						Console.WriteLine("\"@" + v_name + "\":" + v_value + ",");
+						json += "\"@" + v_name + "\":" + v_value + "," + Environment.NewLine;
+					}
+					convert(n.children[i],ref json, has_twin, twin_write);
+					if (i != (n.children.Count - 1))
+					{
+						Console.Write(",");
+						json += ",";
+					}
+					if (i == (n.children.Count - 1))
+					{ Console.Write("\n");
+						json += Environment.NewLine;
+					}
+				}
+				Console.Write("}");
+				json += "}";
+			}
+			//if children are twins
+			else if (has_twin == 1)
+			{
+				if (twin_write == 0)
+				{ Console.WriteLine("\"" + n.name + "\":{");
+					json += "\"" + n.name + "\":{" + Environment.NewLine;
+				}
+				if (n.value != null)
+				{
+					string v_name, v_value;
+					int eq = n.value.IndexOf("=");
+					v_name = n.value.Substring(0, eq);
+					v_value = n.value.Substring(eq + 1);
+					Console.WriteLine("\"@" + v_name + "\":" + v_value + ",");
+					json += "\"@" + v_name + "\":" + v_value + "," + Environment.NewLine;
+				}
+				Console.Write("\"" + n.children[0].name + "\":[");
+				json += "\"" + n.children[0].name + "\":[";
+				twin_write = 1;
+
+				for (int i = 0; i < n.children.Count; i++)
+				{
+
+					Console.Write("\n");
+					json += Environment.NewLine;
+					//if (n.value != null)
+					//{
+					//    string v_name, v_value;
+					//    int eq = n.value.IndexOf("=");
+					//    v_name = n.value.Substring(0, eq);
+					//    v_value = n.value.Substring(eq + 1);
+					//    Console.WriteLine("\"@" + v_name + "\":" + v_value + ",");
+					//}
+					convert(n.children[i],ref json, has_twin, twin_write);
+					if (i != (n.children.Count - 1))
+					{ Console.Write(",");
+						json += ",";
+							}
+					if (i == (n.children.Count - 1))
+					{ Console.Write("\n");
+						json += Environment.NewLine;
+					}
+				}
+				Console.WriteLine("]");
+				json += "]" + Environment.NewLine;
+				Console.Write("}");
+				json += "}";
+			}
+		}
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+			string x = ofd1.FileName;
+			string[] lines1 = System.IO.File.ReadAllLines(@x);
+			string min = null;
+			Tree T = new Tree();
+			T.drawtree(lines1);
+			T.Minifying(ref min);
+			textBox2.Text = min;
+		}
     }
     
 }
