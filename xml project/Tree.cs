@@ -258,7 +258,7 @@ namespace xml_project
 		      List<node> child =f.children;
               if (f.children.Count!=0)
               {
-              Console.WriteLine("\n");
+              Console.Write("\n");
               for(int i=0;i<f.children.Count;i++)
               {
                  Format_Xml(child[i]);
@@ -272,7 +272,7 @@ namespace xml_project
           }
           
           Console.Write("</"+f.name+">");
-          Console.WriteLine("\n");
+          Console.Write("\n");
           }
         
 
