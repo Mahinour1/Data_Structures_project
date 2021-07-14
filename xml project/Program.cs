@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace xml_project
@@ -9,19 +10,12 @@ namespace xml_project
         static void Main(string[] args)
         {
 			string[] lines = System.IO.File.ReadAllLines(@"D:\trial.txt");
-			Queue<HeapNode> queue = new Queue<HeapNode>();
-			Frequency(lines, queue);
-			Queue<HeapNode> copy = new Queue<HeapNode>();
-			copy = queue;
-			while (copy.Count != 0)
-			{
-				Console.WriteLine(copy.Peek().Data + " " + copy.Peek().Freq);
-				copy.Dequeue();
-			}
+			List<HeapNode> list = new List<HeapNode>();
+			Frequency(lines, list);
+			HuffmanBuild(ref list);
 			
 		}
-		
-        static void Frequency(string[] input, Queue<HeapNode> q)
+        static void Frequency(string[] input, List<HeapNode> list)
         {
 			string[] copy = new string[input.Length];
 			for (int i = 0; i < input.Length; i++)
@@ -55,12 +49,30 @@ namespace xml_project
 						HeapNode node = new HeapNode();
 						node.Data = compare;
 						node.Freq = freq;
-						q.Enqueue(node);
+						list.Add(node);
 					}
 					
                 }
             }
         }
-       
+
+		static void HuffmanBuild(ref List<HeapNode> heap)
+		{
+			heap = heap.OrderBy(node => node.Freq).ToList();
+			HeapNode Left, Right;
+			while (heap.Count > 1)
+			{
+				Left = heap[0];
+				Right = heap[1];
+				heap.RemoveAt(0);
+				heap.RemoveAt(0);
+				HeapNode m = new HeapNode();
+				m.Freq = Left.Freq + Right.Freq;
+				m.Left = Left; m.Right = Right;
+				heap.Add(m);
+				heap = heap.OrderBy(node => node.Freq).ToList();
+
+			}
+		}
 	}
 }
