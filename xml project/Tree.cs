@@ -254,6 +254,7 @@ namespace xml_project
               if(f.value!=null)
                 Console.Write( " "+f.value+">");
               else Console.Write(">");
+	      Console.Write(f.data);
 		      List<node> child =f.children;
               if (f.children.Count!=0)
               {
