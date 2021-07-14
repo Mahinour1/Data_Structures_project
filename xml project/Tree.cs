@@ -7,7 +7,7 @@ namespace xml_project
 	class Tree
 	{
 		public node root { get; set; }
-		public int space=0;
+		public int space=0,m=0;
 		public Tree(node root = null)
 		{ }
 		/*Tree()
@@ -237,9 +237,15 @@ namespace xml_project
                   Console.Write(" ");
                 } 
         }
-         public void Format_Xml(node f) 
+         public void Format_Xml(node f,int m) 
         { 
-          print_space(f);  
+         // print_space(f);  
+		 for(int i=0;i<m;i++)
+             
+			 {
+				 Console.Write(" ");
+				
+			 }
           if(f.type==0)/// print <find />
             {
                Console.Write( "<"+f.name);
@@ -260,15 +266,22 @@ namespace xml_project
               {
               Console.Write("\n");
               for(int i=0;i<f.children.Count;i++)
-              {
-                 Format_Xml(child[i]);
+              {m++;
+                 Format_Xml(child[i],m);
+	       m--;
               }
          
             }
          
           if(f.children.Count!=0)
           {
-            print_space(f);
+          //  print_space(f);
+		  for(int i=0;i<m;i++)
+        
+			 {
+				 Console.Write(" ");
+				
+			 }
           }
           
           Console.Write("</"+f.name+">");
@@ -279,7 +292,7 @@ namespace xml_project
         }
          public void Format()
         {
-		  Format_Xml(root); 
+		  Format_Xml(root,m); 
 		}
         public void Minifying()
         {
