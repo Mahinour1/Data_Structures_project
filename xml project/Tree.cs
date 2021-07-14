@@ -244,9 +244,9 @@ namespace xml_project
             {
                Console.Write( "<"+f.name);
                 if(f.value!=null)
-                Console.Write( " "+f.value+" />");
+                Console.Write( " "+f.value+"/>"+"\n");
 
-                else Console.Write(" />");
+                else Console.Write(" />"+"\n");
            }
           else
           {
