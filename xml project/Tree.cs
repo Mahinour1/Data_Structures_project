@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace xml_project
 {
 	class Tree
-	{       public int space=0;
+	{
 		public node root { get; set; }
+		public int space=0;
 		public Tree(node root = null)
 		{ }
 		/*Tree()
@@ -123,9 +124,9 @@ namespace xml_project
 						{
 							child.type = 1;
 							if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
-							{	child.name = mm.Substring(1, close- 1);// set child name
-							 child.value = null ;
-							}
+							  {	child.name = mm.Substring(1, close- 1);// set child name 
+							 child.value = null ;}
+
 							else // there is value <tag ..>
 							{
 								child.name = mm.Substring(1, space-1); // set child name
@@ -199,59 +200,67 @@ namespace xml_project
 
 
 		}
-               
-		      public int Find_Space(node l,node h)
-          {
-            if(l.name  ==  h.name)
-               { 
-			  return 0;
-		       }
+				  
+         public int Find_Space(node l,node h)
+        {
+               if(l.name  ==  h.name)
+                 { 
+			       return 0;
+		         }
          
-           else
+              else
               {   
-             if(h.children.Count !=0)
-			++space;
-             List<node> child =h.children;
-			for(int i=0;i<h.children.Count ;i++)
-               {
-			   if(child[i].name == l.name) return space;
-			   }
+                 if(h.children.Count !=0)
+			     ++space;
+                 List<node> child =h.children;
+			     for(int i=0;i<h.children.Count ;i++)
+                   {
+			         if(child[i].name == l.name) return space;
+			        }
                  
-            for(int j=0;j<h.children.Count;j++)
-               {
-              if(h.children.Count!=0)
-                Find_Space( l, child[j]);
-              }
-            return space;
-           } 
+                 for(int j=0;j<h.children.Count;j++)
+                   {
+                     if(h.children.Count!=0)
+                      Find_Space( l, child[j]);
+                    }
+                   return space;
+                }      
         }
-
-     public void print_space(node e)
-     {
-       int num=0;
-	   space=0;
-       num=Find_Space(e,root);
-      // Console.Write(num);
-      for(int i=0;i<=num;i++)
-      {
-           Console.Write(" ");
-      }
-   }
-    
-        public void format(node f) 
+         public void print_space(node e)
+        {
+              int num=0;
+	          space=0;
+              num=Find_Space(e,root);
+              // Console.Write(num);
+              for(int i=0;i<=num;i++)
+               {
+                  Console.Write(" ");
+                } 
+        }
+         public void Format_Xml(node f) 
         { 
           print_space(f);  
-          Console.Write( "<"+f.name);
-          if(f.value!=null)
-            Console.Write( " "+f.value+">");
-          else Console.Write(">");
-		  List<node> child =f.children;
-          if (f.children.Count!=0)
+          if(f.type==0)/// print <find />
             {
+               Console.Write( "<"+f.name);
+                if(f.value!=null)
+                Console.Write( " "+f.value+" />");
+
+                else Console.Write(" />");
+           }
+          else
+          {
+              Console.Write( "<"+f.name);
+              if(f.value!=null)
+                Console.Write( " "+f.value+">");
+              else Console.Write(">");
+		      List<node> child =f.children;
+              if (f.children.Count!=0)
+              {
               Console.WriteLine("\n");
               for(int i=0;i<f.children.Count;i++)
               {
-                format(child[i]);
+                 Format_Xml(child[i]);
               }
          
             }
@@ -263,39 +272,48 @@ namespace xml_project
           
           Console.Write("</"+f.name+">");
           Console.WriteLine("\n");
-            
-   
+          }
+        
 
         }
-        public void Format_Xml()
+         public void Format()
         {
-		  format(root); 
+		  Format_Xml(root); 
 		}
-		
-		 public void Minifying_Xml()
+        public void Minifying()
         {
-         Minifying(root);
+         Minifying_Xml(root);
         }
 
-      public void Minifying(node f)
-      { 
-          Console.Write( "<"+f.name);
-          if(f.value!=null)
-            Console.Write( " "+f.value+">");
-          else Console.Write(">");
-          Console.Write(f.data);
-		  List<node> child =f.children;
-          if (f.children.Count!=0)
+         public void Minifying_Xml(node f)
+      {   if(Type==true)//<find />
+           {
+             Console.Write( "<"+f.name);
+             if(f.value!=null)
+             Console.Write( " "+f.value+" />");
+             else Console.Write(" />");
+           }
+          else
           {
-             for(int i=0;i<f.children.Count;i++)
-             {
-               Minifying(child[i]);
-             }
+             Console.Write( "<"+f.name);
+             if(f.value!=null)
+                  Console.Write( " "+f.value+">");
+             else Console.Write(">");
+             Console.Write(f.data);
+		     List<node> child =f.children;
+             if (f.children.Count!=0)
+                 {
+                   for(int i=0;i<f.children.Count;i++)
+                     {
+                          Minifying_Xml(child[i]);
+                     }
+                 }  
+             Console.Write("</"+f.name+">");
           }  
-          Console.Write("</"+f.name+">");
-      }  
-
-
+       }       
+		
+		
+		
 
 
 	}
