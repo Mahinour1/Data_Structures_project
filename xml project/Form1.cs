@@ -12,37 +12,43 @@ using System.IO;
 
 namespace WindowsFormsApp1
 {
- 
-    public partial class Form1 : Form
-    {
-        public Form1()
-        {
-            InitializeComponent();
-        }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //OpenFileDialog ofd = new OpenFileDialog();
-            ofd1.ShowDialog();
-            string x = ofd1.FileName;
-            string[] lines1 = System.IO.File.ReadAllLines(@x);
+	public partial class Form1 : Form
+	{
+		public Form1()
+		{
+			InitializeComponent();
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			//OpenFileDialog ofd = new OpenFileDialog();
+			ofd1.ShowDialog();
+			string x = ofd1.FileName;
+			string[] lines1 = System.IO.File.ReadAllLines(@x);
 			int[] error = new int[lines1.Length];
 			string[] copy = new string[lines1.Length];
-			
+
 			string before = null;
 			CheckError(lines1, error, copy);
-			//Label l = new Label();
+
 			for (int i = 0; i < lines1.Length; i++)
 			{
+				if (error[i] == 1)
+				{
+				lines1[i]+=char.ConvertFromUtf32(8595);
+				}
 				before += lines1[i] + Environment.NewLine;
 
 			}
 			textBox1.Text = before;
+			/*string y=textBox1.Lines[0];
+			
 			for (int i = 0; i < lines1.Length; i++) 
 			{int finish= copy[i].Length;
 				textBox1.Select(0,finish);
 				//textBox1.BackColor(copy[i]);
-			}
+			}*/
 		}
 		public static void CheckError(string[] c, int[] error, string[] copy)
 		{
@@ -177,29 +183,29 @@ namespace WindowsFormsApp1
 			}
 		}
 
-        private void label1_Click(object sender, EventArgs e)
-        {
+		private void label1_Click(object sender, EventArgs e)
+		{
 
-        }
+		}
 
-        private void label2_Click(object sender, EventArgs e)
-        {
+		private void label2_Click(object sender, EventArgs e)
+		{
 
-        }
+		}
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
+		private void textBox3_TextChanged(object sender, EventArgs e)
+		{
 
-        }
+		}
 
-        private void button2_Click(object sender, EventArgs e)
+		private void button2_Click(object sender, EventArgs e)
 		{
 			string x = ofd1.FileName;
 			string[] lines1 = System.IO.File.ReadAllLines(@x);
 			int[] error = new int[lines1.Length];
 			string[] copy = new string[lines1.Length];
 			string z = null;
-		
+
 			CheckError(lines1, error, copy);
 
 			for (int i = 0; i < lines1.Length; i++)
@@ -209,5 +215,7 @@ namespace WindowsFormsApp1
 			}
 			textBox2.Text = z;
 		}
-    }
+
+	}
+    
 }
