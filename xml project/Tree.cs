@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace xml_project
+namespace WindowsFormsApp1
 {
 	class Tree
 	{
 		public node root { get; set; }
+		public int m = 0;
 		public Tree(node root = null)
 		{ }
 		/*Tree()
@@ -119,7 +120,7 @@ namespace xml_project
 						int space = mm.IndexOf(' ');
 						int dash = mm.IndexOf('/');
 						int open = mm.IndexOf('<');
-						if (dash == -1 || dash > close) // not opening and closing at the same time
+						if (dash == -1 || dash > close || (dash < close && ((close - dash) > 1))) // not opening and closing at the same time
 						{
 							child.type = 1;
 							if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
@@ -197,5 +198,127 @@ namespace xml_project
 
 
 		}
+		public void Format_Xml(node f, int m,ref string form)
+		{
+			// print_space(f);  
+			for (int i = 0; i < m; i++)
+
+			{
+				Console.Write(" ");
+				form += " ";
+			}
+			if (f.type == 0)/// print <find />
+			{
+				Console.Write("<" + f.name);
+				form += "<" + f.name;
+				if (f.value != null)
+				{ Console.Write(" " + f.value + "/>" + "\n");
+					form += " " + f.value + "/>" + Environment.NewLine;
+				}
+				else { Console.Write(" />" + "\n");
+					form += " />" + Environment.NewLine;
+						}
+			}
+			else
+			{
+				Console.Write("<" + f.name);
+				form += "<" + f.name;
+				if (f.value != null)
+				{
+					Console.Write(" " + f.value + ">");
+					form += " " + f.value + ">";
+				}
+
+				else { Console.Write(">");
+					form += ">";
+				}
+				Console.Write(f.data);
+				form += f.data;
+				List <node> child = f.children;
+				if (f.children.Count != 0)
+				{
+					Console.Write("\n");
+					form += Environment.NewLine;
+					for (int i = 0; i < f.children.Count; i++)
+					{
+						m++;
+						Format_Xml(child[i], m, ref form);
+						m--;
+					}
+
+				}
+
+				if (f.children.Count != 0)
+				{
+					//  print_space(f);
+					for (int i = 0; i < m; i++)
+
+					{
+						Console.Write(" ");
+						form += " ";
+					}
+				}
+
+				Console.Write("</" + f.name + ">");
+				form += "</" + f.name + ">";
+				Console.Write("\n");
+				form += Environment.NewLine;
+			}
+
+
+		}
+		public void Format(ref string form)
+		{
+			Format_Xml(root, m, ref form);
+		}
+		public void Minifying(ref string min)
+		{
+			Minifying_Xml(root,ref min);
+		}
+
+		public void Minifying_Xml(node f, ref string min )
+		{
+			if (f.type == 0)//<find />
+			{
+				Console.Write("<" + f.name);
+				min += "<" + f.name;
+				if (f.value != null)
+				{
+					Console.Write(" " + f.value + " />");
+					min += " " + f.value + " />";
+				}
+				else {
+					Console.Write(" />");
+					min += " />";
+				}
+			}
+			else
+			{
+				Console.Write("<" + f.name);
+				min += "<" + f.name;
+				if (f.value != null)
+				{
+					Console.Write(" " + f.value + ">");
+					min += " " + f.value + ">";
+				}
+				else
+				{ Console.Write(">");
+					min += ">";
+				}
+				Console.Write(f.data);
+				min += f.data;
+				List <node> child = f.children;
+				if (f.children.Count != 0)
+				{
+					for (int i = 0; i < f.children.Count; i++)
+					{
+						Minifying_Xml(child[i],ref min);
+					}
+				}
+				Console.Write("</" + f.name + ">");
+				min += "</" + f.name + ">";
+			}
+		}
+
 	}
 }
