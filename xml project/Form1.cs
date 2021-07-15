@@ -18,6 +18,9 @@ namespace WindowsFormsApp1
 		public Form1()
 		{
 			InitializeComponent();
+			textBox1.ScrollBars = ScrollBars.Both;
+			textBox2.ScrollBars = ScrollBars.Both;
+			
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -135,7 +138,7 @@ namespace WindowsFormsApp1
 							int space = mm.IndexOf(' ');
 							int dash = mm.IndexOf('/');
 							int open = mm.IndexOf('<');
-							if (dash == -1 || dash > close) // not opening and closing at the same time
+							if (dash == -1 || dash > close || (dash<close && ((close-dash)>1) )) // not opening and closing at the same time
 							{
 								if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
 									name = mm.Substring(1, close - 1); // set child name
