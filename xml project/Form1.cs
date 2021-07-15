@@ -241,9 +241,12 @@ namespace WindowsFormsApp1
 			//ofd.ShowDialog();
 			string x = ofd1.FileName;
 			string[] lines1 = System.IO.File.ReadAllLines(@x);
+			int[] error = new int[lines1.Length];
+			string[] copy = new string[lines1.Length];
+			CheckError(lines1, error, copy);
 			string form = null;
 			Tree T = new Tree();
-			T.drawtree(lines1);
+			T.drawtree(copy);
 			T.Format(ref form);	
 			textBox2.Text =form ;
 		}
@@ -255,11 +258,11 @@ namespace WindowsFormsApp1
 
         private void button5_Click(object sender, EventArgs e)
         {
-			OpenFileDialog ofd2 = new OpenFileDialog();
-			ofd2.ShowDialog();
-			string x = ofd2.FileName;
-			TextWriter txt = new StreamWriter(@x);
-			txt.Write(textBox1.Text);
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.ShowDialog();
+			string x = sfd.FileName;
+			StreamWriter txt = new StreamWriter(@x);
+			txt.WriteLine (textBox2.Text);
 			txt.Close();
 		}
 
@@ -481,7 +484,7 @@ namespace WindowsFormsApp1
 				json += "}";
 			}
 		}
-
+		
         private void button6_Click(object sender, EventArgs e)
         {
 			string x = ofd1.FileName;
@@ -490,7 +493,50 @@ namespace WindowsFormsApp1
 			Tree T = new Tree();
 			T.drawtree(lines1);
 			T.Minifying(ref min);
+		
 			textBox2.Text = min;
+		}
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+		List<HeapNode> ln;
+        private void button7_Click(object sender, EventArgs e)
+        {
+			Program P=new Program();
+			List<HeapNode> list = new List<HeapNode>();
+			string[] lines = textBox2.Lines;
+			P.Frequency(lines, list);
+			P.HuffmanBuild(ref list);
+			string stream = null;
+			List<Characters> Bits = new List<Characters>();
+			P.HuffmanTraverse(list[0], ref Bits, ref stream);
+			string encoded = null;
+			P.Encoding(lines, Bits, ref encoded);
+			ln = list;
+			//Console.WriteLine(encoded);
+			textBox2.Text = encoded;
+			
+		}
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+			Program P = new Program();
+			//List<HeapNode> list = new List<HeapNode>();
+		
+			//Console.WriteLine(encoded);
+			string encoded = textBox2.Text;
+			
+			string decoded = P.Decoding(ln[0], encoded);
+			//Console.WriteLine(decoded);
+			textBox2.Text = decoded;
+			
 		}
     }
     
