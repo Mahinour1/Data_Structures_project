@@ -16,6 +16,11 @@ namespace xml_project
 			string stream = null;
 			List<Characters> Bits = new List<Characters>();
 			HuffmanTraverse(list[0], ref Bits, ref stream);
+			string encoded = null;
+			Encoding(lines, Bits, ref encoded);
+			Console.WriteLine(encoded);
+			string decoded = Decoding(list[0], encoded);
+			Console.WriteLine(decoded);
 		}
         static void Frequency(string[] input, List<HeapNode> list)
         {
@@ -95,6 +100,35 @@ namespace xml_project
 			if (stream.Length != 0)
 				stream = stream.Substring(0, stream.Length - 1);
 			return;
+		}
+		static void Encoding(string[] lines, List<Characters> bits, ref string encoded)
+		{
+			for (int i = 0; i < lines.Length; i++)
+			{
+				for (int j = 0; j < lines[i].Length; j++)
+				{
+					char curr = (lines[i])[j];
+					encoded += bits[bits.FindIndex(x => x.Data == (lines[i])[j])].Bits;
+				}
+			}
+		}
+		static string Decoding(HeapNode root, string encoded)
+		{
+			string decoded = null; int index = 0; HeapNode curr = root;
+			while (index < encoded.Length)
+			{
+				while (curr.Left != null && curr.Right != null && index < encoded.Length)
+				{
+					if (encoded[index] == '0')
+						curr = curr.Left;
+					else if (encoded[index] == '1')
+						curr = curr.Right;
+					index++;
+				}
+				decoded += curr.Data;
+				curr = root;
+			}
+			return decoded;
 		}
 	}
 }
