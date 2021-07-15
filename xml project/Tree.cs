@@ -7,7 +7,7 @@ namespace xml_project
 	class Tree
 	{
 		public node root { get; set; }
-		public int space=0,m=0;
+		public int m=0;
 		public Tree(node root = null)
 		{ }
 		/*Tree()
@@ -120,7 +120,7 @@ namespace xml_project
 						int space = mm.IndexOf(' ');
 						int dash = mm.IndexOf('/');
 						int open = mm.IndexOf('<');
-						if (dash == -1 || dash > close) // not opening and closing at the same time
+						if (dash == -1 || dash > close || (dash < close && close -dash>1)) // not opening and closing at the same time
 						{
 							child.type = 1;
 							if (space == -1 || space > close || (space < close && space < open)) // there is no value <tag>
