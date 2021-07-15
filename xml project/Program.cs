@@ -39,19 +39,19 @@ namespace xml_project
                     {
                         for (int f = 0; f < copy[k].Length; f++)
                         {
-							if ( compare !='0' && (copy[k])[f] != '0')
+							if ( compare !='ى' && (copy[k])[f] != 'ى')
 							{
 								if ((copy[k])[f] == compare)
 								{
 									freq++;
-									string n = copy[k].Substring(0, f) + "0" + copy[k].Substring(f + 1);
+									string n = copy[k].Substring(0, f) + "ى" + copy[k].Substring(f + 1);
 									copy[k] = n;
 								}
 							}
                            
                         }
                     }
-					if (compare != '0')
+					if (compare != 'ى')
 					{
 						HeapNode node = new HeapNode();
 						node.Data = compare;
